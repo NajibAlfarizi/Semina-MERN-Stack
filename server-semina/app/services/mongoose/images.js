@@ -16,10 +16,10 @@ const createImages = async (req) => {
   return result;
 };
 
-const getOneImages = async (id) => {
+const checkingImages = async (id) => {
   const result = await Images.findOne({ _id: id });
 
-  if (!result) throw new Error("Tidak ada Gambar dengan id tersebut");
+  if (!result) throw new Error(`Tidak ada gambar dengan id : ${id}`);
 
   return result;
 };
@@ -27,5 +27,5 @@ const getOneImages = async (id) => {
 module.exports = {
   createImages,
   generateUrlImages,
-  getOneImages,
+  checkingImages,
 };

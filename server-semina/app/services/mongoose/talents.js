@@ -1,6 +1,6 @@
 const Talents = require("../../api/v1/talents/model");
 const { BadRequest, NotFound } = require("../../errors");
-const { getOneImages } = require("./images");
+const { checkingImages } = require("./images");
 
 const getAllTalents = async (req) => {
   const { keyword } = req.query;
@@ -36,7 +36,7 @@ const getOneTalents = async (req) => {
 const createTalents = async (req) => {
   const { name, role, image } = req.body;
 
-  await getOneImages(image);
+  await checkingImages(image);
   const check = await Talents.findOne({ name });
 
   if (check) throw new BadRequest("nama pembicara sudah ada");
@@ -54,7 +54,7 @@ const updateTalents = async (req) => {
   const {id} = req.params;
   const {name, role, image} = req.body;
 
-  await getOneImages(image);
+  await checkingImages(image);
 
   const check = await Talents.findOne({name, _id: {$ne: id}});
   if(check) throw new BadRequest("nama pembicara sudah ada");
@@ -78,10 +78,17 @@ const deleteTalents = async (req) => {
   return result
 }
 
+const checkingTalents = async (id) => {
+  const result = await Talents.findOne({_id: id});
+  if(!result) throw new NotFound(`Tidak ada pembicara dengan id : ${id}`);
+  return result
+}
+
 module.exports = {
   getAllTalents,
   getOneTalents,
   createTalents,
   updateTalents,
-  deleteTalents
+  deleteTalents,
+  checkingTalents
 };
